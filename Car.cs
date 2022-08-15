@@ -22,8 +22,12 @@ namespace Test
             this.type = "not implemented";
         }
 
+        /// <summary>
+        /// Calculates how far car can drive with current fuel
+        /// </summary>
+        /// <param name="fuelLeft">pass -1 if it is a full tank</param>
+        /// <returns></returns>
         public decimal CalculateDistanceRemainder(decimal fuelLeft = noValue)
-        //Если в метод не передан остаток топлива, то в рассчет будет принят "Полный бак"
         {
             if (fuelLeft == 0)
             {
@@ -47,51 +51,5 @@ namespace Test
         }
 
         public abstract decimal GetPowerReserve(decimal fuel, decimal additionalValue = 0);
-    }
-
-    class PassengerCar : Car
-    {
-        private int maxPassengersCount;
-
-        public PassengerCar(decimal fuelConsumption, decimal fuelTank, decimal speed, int maxPassengers) : base(fuelConsumption, fuelTank, speed)
-        {
-            type = "Passenger Car";
-                maxPassengersCount = maxPassengers;
-        }
-
-        public override decimal GetPowerReserve(decimal fuel, decimal additionalValue = 0)
-        {
-            decimal passengersCount = additionalValue;
-
-            if(passengersCount > maxPassengersCount)
-            {
-                throw new ArgumentOutOfRangeException("Количество пассажиров превышает вместимость автомобиля");
-            }
-
-            return CalculateDistanceRemainder(fuel) * (passengersCount * 0.94m);
-        }
-    }
-
-    class CargoTruck : Car
-    {
-        private decimal cargoCapacity;
-
-        public CargoTruck(decimal fuelConsumption, decimal fuelTank, decimal speed, decimal capacity) : base(fuelConsumption, fuelTank, speed)
-        {
-            cargoCapacity = capacity;
-        }
-
-        public override decimal GetPowerReserve(decimal fuel, decimal additionalValue = 0)
-        {
-            decimal cargoWeight = additionalValue;
-
-            if (cargoWeight > cargoCapacity)
-            {
-                throw new ArgumentOutOfRangeException("Вес груза превышает грузоподъемность автомобиля");
-            }
-
-            int coefficient = (int) cargoWeight / 200;
-            return CalculateDistanceRemainder(fuel) * (coefficient * 0.96m);
-        }
     }
 }
