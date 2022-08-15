@@ -1,0 +1,31 @@
+CREATE TABLE IF NOT EXISTS public."Customers"
+(
+    "Id" integer NOT NULL,
+    "Name" character varying(15) NOT NULL,
+    CONSTRAINT "Customers_pkey" PRIMARY KEY ("Id")
+)
+
+INSERT INTO public."Customers"(
+	"Id", "Name")
+	VALUES (1, 'Max'),
+    VALUES (2, 'Pavel'),
+    VALUES (3, 'Ivan'),
+    VALUES (4, 'Leonid');
+
+INSERT INTO public."Orders"(
+	"Id", "CustomerId")
+	VALUES (1, 2),
+	VALUES (2, 4);
+
+CREATE TABLE IF NOT EXISTS public."Orders"
+(
+    "Id" integer NOT NULL,
+    "CustomerId" integer,
+    CONSTRAINT "Orders_pkey" PRIMARY KEY ("Id"),
+    CONSTRAINT "Customers" FOREIGN KEY ("CustomerId")
+        REFERENCES public."Customers" ("Id") MATCH SIMPLE
+)
+
+SELECT "Name"
+	FROM public."Customers" 
+    WHERE NOT EXISTS (SELECT * FROM "Orders" WHERE "Orders"."CustomerId" = "Customers"."Id");
